@@ -25,31 +25,32 @@ export default class GameScene extends Phaser.Scene {
       // Criar o mapa
       const map = this.make.tilemap({ key: 'map' });
       const tileset = map.addTilesetImage('tile_set', 'tile_set');
+      console.log('Tileset:', tileset);
 
+  
       // Calcule a posição inicial para centralizar a camada
       const offsetX = (this.cameras.main.width - map.widthInPixels) / 2;
       const offsetY = (this.cameras.main.height - map.heightInPixels) / 2;
-
+  
       // Criar a camada com os offsets calculados para centralizar
       const groundLayer = map.createLayer('terrain', tileset, offsetX, offsetY);
+      console.log('Camada de terreno:', groundLayer);
 
+  
       // Verifique a existência da camada
       if (groundLayer) {
         groundLayer.setCollisionByProperty({ collides: true });
-
+  
+        // Adicionar a camada ao fundo da cena
+        this.children.sendToBack(groundLayer);
+  
         // Centralizar a câmera na camada
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.centerOn(map.widthInPixels / 2, map.heightInPixels / 2);
         this.cameras.main.zoom = this.calculateOptimalZoom();
-
+  
         // Inicializar a cobra com segmentos iniciais
-        const initialSegments = [
-          new Phaser.Math.Vector2(5, 5),
-          new Phaser.Math.Vector2(4, 5),
-          new Phaser.Math.Vector2(3, 5),
-        ];
-        // Chamando o construtor de Snake com os parâmetros necessários
-        this.snake = new Snake(this, 5, 5, 1, 5, 4, 'snakeSprite', 64, 64);
+        this.snake = new Snake(this, 5, 5, 1, 0.01, 4, 'snakeSprite', 32, 32);
         this.snake.drawSnake(); // Desenhe a cobra inicialmente
       } else {
         console.error('A camada "terrain" não foi encontrada. Verifique o nome da camada.');
@@ -58,6 +59,7 @@ export default class GameScene extends Phaser.Scene {
       console.error('Erro ao criar a cena:', error);
     }
   }
+  
 
   private calculateOptimalZoom(): number {
     const scaleX = window.innerWidth / this.cameras.main.width;
@@ -67,7 +69,7 @@ export default class GameScene extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     // Verifica se a cobra pode se mover e chama o método de movimento
-    if (this.snake.tryMove(delta)) {
+    if (this.snake.canMove(delta)) {
       this.snake.move();
     }
   
