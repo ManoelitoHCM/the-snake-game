@@ -76,7 +76,7 @@ export default class Snake {
         }
     }
 
-    private nextPosition(): { x: number, y: number } {
+    public nextPosition(): { x: number, y: number } {
         const head = this.segments[0];
         const nextX = head.x + this.directions[this.direction][0];
         const nextY = head.y + this.directions[this.direction][1];
@@ -145,5 +145,13 @@ export default class Snake {
             sprite.setDisplaySize(this.tileWidth, this.tileHeight);
             this.sprites.push(sprite); // Armazena o sprite na lista
         }
+    }
+
+    getTileWidth(): number {
+        return this.tileWidth;
+    }
+
+    getTileHeight(): number {
+        return this.tileHeight;
     }
 }
