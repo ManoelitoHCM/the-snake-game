@@ -49,7 +49,7 @@ export default class GameScene extends Phaser.Scene {
           new Phaser.Math.Vector2(3, 5),
         ];
         // Chamando o construtor de Snake com os parâmetros necessários
-        this.snake = new Snake(this, 20, 20, 0, 3, 4, 'snakeSprite', 64, 64);
+        this.snake = new Snake(this, 5, 5, 1, 5, 4, 'snakeSprite', 64, 64);
         this.snake.drawSnake(); // Desenhe a cobra inicialmente
       } else {
         console.error('A camada "terrain" não foi encontrada. Verifique o nome da camada.');
@@ -59,15 +59,19 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  update(): void {
-    // Atualizar a cobra a cada frame
-    this.snake.drawSnake();
-  }
-
   private calculateOptimalZoom(): number {
-    // Calcula um nível de zoom ideal baseado nas dimensões da janela
     const scaleX = window.innerWidth / this.cameras.main.width;
     const scaleY = window.innerHeight / this.cameras.main.height;
     return Math.min(scaleX, scaleY);
+  }
+
+  update(time: number, delta: number): void {
+    // Verifica se a cobra pode se mover e chama o método de movimento
+    if (this.snake.tryMove(delta)) {
+      this.snake.move();
+    }
+  
+    // Desenhe a cobra após o movimento
+    this.snake.drawSnake();
   }
 }
