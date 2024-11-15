@@ -1,25 +1,46 @@
-import * as Phaser from 'phaser';
-import Snake from '../entities/Snake'; 
+import 'phaser';
+import mainScreen from '../assets/main-screen.png';
 
 export default class MainScene extends Phaser.Scene {
-  private snake: Snake;
-
   constructor() {
     super({ key: 'MainScene' });
   }
 
-  preload() {
-    // Carregar a imagem da folha de sprites
-    this.load.image('snakeTexture', 'phaser-ts-skeleton\assets\snake-graphics.png');
+  preload(): void {
+    this.load.image('menuBackground', mainScreen);
   }
 
-  create() {
-    // Instancia a cobra
-    this.snake = new Snake(this, 'snakeTexture');
-  }
+  create(): void {
+    this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'menuBackground').setOrigin(0.5);
 
-  update() {
-    // Chama o método para desenhar a cobra a cada quadro
-    this.snake.drawSnake();
+    const startZone = this.add.zone(
+      this.cameras.main.centerX,
+      this.cameras.main.centerY - 230,
+      150,
+      45
+    ).setOrigin(0.5).setInteractive({ cursor: 'pointer' });
+    startZone.on('pointerdown', () => {
+      this.scene.start('GameScene');
+    });
+
+    const scoreZone = this.add.zone(
+      this.cameras.main.centerX,
+      this.cameras.main.centerY - 185,
+      150,
+      45
+    ).setOrigin(0.5).setInteractive({ cursor: 'pointer' });
+    scoreZone.on('pointerdown', () => {
+      this.scene.start('ScoreboardScene');
+    });
+
+    const creditsZone = this.add.zone(
+      this.cameras.main.centerX,
+      this.cameras.main.centerY - 140,
+      150,
+      45
+    ).setOrigin(0.5).setInteractive({ cursor: 'pointer' });
+    creditsZone.on('pointerdown', () => {
+      this.scene.start('CreditsScene');
+    });
   }
 }

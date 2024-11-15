@@ -10,7 +10,9 @@ const htmlPluginCfg = new htmlPlugin({
 });
 
 const copyPluginCfg = new copyPlugin({
-  patterns: [{ from: 'maps/*.json', to: 'maps/[name].json' }],
+  patterns: [
+    { from: 'src/assets', to: 'assets' }
+  ],
 });
 
 const tsconfigPathsPluginCfg = new TsconfigPathsPlugin();
@@ -27,7 +29,7 @@ module.exports = {
         test: /\.(png|jpe?g|svg)/i,
         loader: 'file-loader',
         options: {
-          name: 'assets/[name].[ext]',
+          name: 'assets/[name].[ext]', // Garante que os arquivos de imagem sejam salvos em `dist/assets`
         },
       },
       {

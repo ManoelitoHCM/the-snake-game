@@ -1,81 +1,134 @@
-import { Scene } from 'phaser';
+import 'phaser';
 
-class Snake {
-    segments: { x: number; y: number }[];
-    scene: Scene;
-    spriteKey: string;
+export default class Snake {
+  private scene: Phaser.Scene;
+  private segments: { x: number, y: number }[];
+  private tileWidth: number;
+  private tileHeight: number;
+  private spriteSheetKey: string;
+  private direction: number; // 0: Up, 1: Right, 2: Down, 3: Left
+  private speed: number;
+  private moveDelay: number;
+  private growSegments: number;
+  private directions: number[][] = [[0, -1], [1, 0], [0, 1], [-1, 0]];
 
-    constructor(scene: Scene, spriteKey: string) {
-        this.scene = scene;
-        this.spriteKey = spriteKey;
-        this.segments = [{ x: 5, y: 5 }]; // Exemplo de posição inicial
+  constructor(scene: Phaser.Scene, x: number, y: number, direction: number, speed: number, numSegments: number, spriteSheetKey: string, tileWidth: number, tileHeight: number) {
+    this.scene = scene;
+    this.tileWidth = tileWidth;
+    this.tileHeight = tileHeight;
+    this.spriteSheetKey = spriteSheetKey;
+    this.direction = direction;
+    this.speed = speed;
+    this.moveDelay = 0;
+    this.growSegments = 0;
+
+    // Inicializa os segmentos da cobra
+    this.segments = [];
+    for (let i = 0; i < numSegments; i++) {
+      this.segments.push({
+        x: x - i * this.directions[direction][0],
+        y: y - i * this.directions[direction][1]
+      });
+    }
+  }
+
+  grow(): void {
+    this.growSegments++;
+  }
+
+  tryMove(dt: number): boolean {
+    this.moveDelay += dt;
+    const maxMoveDelay = 1 / this.speed;
+    if (this.moveDelay > maxMoveDelay) {
+      return true;
+    }
+    return false;
+  }
+
+  nextMove(): { x: number, y: number } {
+    const nextX = this.segments[0].x + this.directions[this.direction][0];
+    const nextY = this.segments[0].y + this.directions[this.direction][1];
+    return { x: nextX, y: nextY };
+  }
+
+  move(): void {
+    const nextMove = this.nextMove();
+    this.segments[0].x = nextMove.x;
+    this.segments[0].y = nextMove.y;
+
+    const lastSeg = this.segments[this.segments.length - 1];
+    const growX = lastSeg.x;
+    const growY = lastSeg.y;
+
+    for (let i = this.segments.length - 1; i >= 1; i--) {
+      this.segments[i].x = this.segments[i - 1].x;
+      this.segments[i].y = this.segments[i - 1].y;
     }
 
-    drawSnake(): void {
-        for (let i = 0; i < this.segments.length; i++) {
-            const segment = this.segments[i];
-            const segx = segment.x;
-            const segy = segment.y;
-            const tilex = segx * 64; // Multiplicando pelo tamanho de cada tile
-            const tiley = segy * 64;
+    if (this.growSegments > 0) {
+      this.segments.push({ x: growX, y: growY });
+      this.growSegments--;
+    }
 
-            let tx = 0;
-            let ty = 0;
+    this.moveDelay = 0;
+  }
 
-            if (i === 0) {
-                // Cabeça da cobra
-                const nseg = this.segments[i + 1];
-                if (nseg) {
-                    if (segy < nseg.y) {
-                        tx = 3; ty = 0; // Cima
-                    } else if (segx > nseg.x) {
-                        tx = 4; ty = 0; // Direita
-                    } else if (segy > nseg.y) {
-                        tx = 4; ty = 1; // Baixo
-                    } else if (segx < nseg.x) {
-                        tx = 3; ty = 1; // Esquerda
-                    }
-                }
-            } else if (i === this.segments.length - 1) {
-                // Cauda da cobra
-                const pseg = this.segments[i - 1];
-                if (pseg) {
-                    if (pseg.y < segy) {
-                        tx = 3; ty = 2; // Cima
-                    } else if (pseg.x > segx) {
-                        tx = 4; ty = 2; // Direita
-                    } else if (pseg.y > segy) {
-                        tx = 4; ty = 3; // Baixo
-                    } else if (pseg.x < segx) {
-                        tx = 3; ty = 3; // Esquerda
-                    }
-                }
-            } else {
-                // Corpo da cobra
-                const pseg = this.segments[i - 1];
-                const nseg = this.segments[i + 1];
-                if (pseg && nseg) {
-                    if (pseg.x < segx && nseg.x > segx || nseg.x < segx && pseg.x > segx) {
-                        tx = 1; ty = 0; // Horizontal
-                    } else if (pseg.x < segx && nseg.y > segy || nseg.x < segx && pseg.y > segy) {
-                        tx = 2; ty = 0; // Curva esquerda-baixo
-                    } else if (pseg.y < segy && nseg.y > segy || nseg.y < segy && pseg.y > segy) {
-                        tx = 2; ty = 1; // Vertical
-                    } else if (pseg.y < segy && nseg.x < segx || nseg.y < segy && pseg.x < segx) {
-                        tx = 2; ty = 2; // Curva cima-esquerda
-                    } else if (pseg.x > segx && nseg.y < segy || nseg.x > segx && pseg.y < segy) {
-                        tx = 0; ty = 1; // Curva direita-cima
-                    } else if (pseg.y > segy && nseg.x > segx || nseg.y > segy && pseg.x > segx) {
-                        tx = 0; ty = 0; // Curva baixo-direita
-                    }
-                }
-            }
+  drawSnake(): void {
+    for (let i = 0; i < this.segments.length; i++) {
+      const segment = this.segments[i];
+      const tileX = segment.x * this.tileWidth;
+      const tileY = segment.y * this.tileHeight;
 
-            // Adiciona a imagem do segmento da cobra com base na posição no spritesheet
-            const segmentSprite = this.scene.add.image(tilex, tiley, this.spriteKey);
-            segmentSprite.setCrop(tx * 64, ty * 64, 64, 64);
+      let tx = 0;
+      let ty = 0;
+
+      if (i === 0) {
+        // Cabeça
+        const nseg = this.segments[i + 1];
+        if (segment.y < nseg.y) {
+          tx = 3; ty = 0;
+        } else if (segment.x > nseg.x) {
+          tx = 4; ty = 0;
+        } else if (segment.y > nseg.y) {
+          tx = 4; ty = 1;
+        } else if (segment.x < nseg.x) {
+          tx = 3; ty = 1;
         }
-    }
-}
+      } else if (i === this.segments.length - 1) {
+        // Cauda
+        const pseg = this.segments[i - 1];
+        if (pseg.y < segment.y) {
+          tx = 3; ty = 2;
+        } else if (pseg.x > segment.x) {
+          tx = 4; ty = 2;
+        } else if (pseg.y > segment.y) {
+          tx = 4; ty = 3;
+        } else if (pseg.x < segment.x) {
+          tx = 3; ty = 3;
+        }
+      } else {
+        // Corpo
+        const pseg = this.segments[i - 1];
+        const nseg = this.segments[i + 1];
+        if ((pseg.x < segment.x && nseg.x > segment.x) || (nseg.x < segment.x && pseg.x > segment.x)) {
+          tx = 1; ty = 0;
+        } else if ((pseg.x < segment.x && nseg.y > segment.y) || (nseg.x < segment.x && pseg.y > segment.y)) {
+          tx = 2; ty = 0;
+        } else if ((pseg.y < segment.y && nseg.y > segment.y) || (nseg.y < segment.y && pseg.y > segment.y)) {
+          tx = 2; ty = 1;
+        } else if ((pseg.y < segment.y && nseg.x < segment.x) || (nseg.y < segment.y && pseg.x < segment.x)) {
+          tx = 2; ty = 2;
+        } else if ((pseg.x > segment.x && nseg.y < segment.y) || (nseg.x > segment.x && pseg.y < segment.y)) {
+          tx = 0; ty = 1;
+        } else if ((pseg.y > segment.y && nseg.x > segment.x) || (nseg.y > segment.y && pseg.x > segment.x)) {
+          tx = 0; ty = 0;
+        }
+      }
 
-export default Snake;
+      // Desenhar o segmento da cobra
+      const frameIndex = tx + ty * 5; // Ajuste conforme necessário
+      const sprite = this.scene.add.sprite(tileX, tileY, this.spriteSheetKey, frameIndex);
+      sprite.setDisplaySize(this.tileWidth, this.tileHeight);
+    }
+  }
+}
