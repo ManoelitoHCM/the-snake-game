@@ -1,6 +1,9 @@
 import 'phaser';
+import MusicController from '../entities/MusicController';
 
 export default class GameOverScene extends Phaser.Scene {
+  private musicController: MusicController;
+
   constructor() {
     super({ key: 'GameOverScene' });
   }
@@ -8,9 +11,14 @@ export default class GameOverScene extends Phaser.Scene {
   preload(): void {
     // Carregar a imagem de fundo
     this.load.image('gameOverBackground', '../assets/images/game-over-screen.png');
+    this.load.audio('gameOverMusic', '../assets/soundtrack/game-over.mp3');
   }
 
   create(): void {
+    // Inicializar o controlador de música
+    this.musicController = new MusicController(this, 'gameOverMusic');
+    this.musicController.playMusic();
+
     // Adicionar a imagem de fundo
     this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'gameOverBackground').setOrigin(0.5);
 
@@ -33,11 +41,13 @@ export default class GameOverScene extends Phaser.Scene {
 
     // Adicionar evento de teclado para reiniciar o jogo
     this.input.keyboard.on('keydown-SPACE', () => {
+      this.musicController.stopMusic(); // Parar a música antes de mudar de cena
       this.scene.start('GameScene'); // Reinicia o jogo voltando para a `GameScene`
     });
 
     this.input.keyboard.on('keydown-ESC', () => {
-        this.scene.start('MainScene'); // Volta para a `MainScene`
-      });
+      this.musicController.stopMusic(); // Parar a música antes de mudar de cena
+      this.scene.start('MainScene'); // Volta para a `MainScene`
+    });
   }
 }

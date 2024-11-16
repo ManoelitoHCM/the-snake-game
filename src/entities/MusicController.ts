@@ -2,38 +2,38 @@ import 'phaser';
 
 export default class MusicController {
   private scene: Phaser.Scene;
-  private music: Phaser.Sound.BaseSound;
+  private currentMusic: Phaser.Sound.BaseSound | null = null;
   private isMuted: boolean = false;
 
   constructor(scene: Phaser.Scene, musicKey: string, volume: number = 0.5) {
     this.scene = scene;
-    this.music = this.scene.sound.add(musicKey, {
+    this.currentMusic = this.scene.sound.add(musicKey, {
       loop: true,
       volume: volume,
     });
   }
 
   public playMusic(): void {
-    if (!this.music.isPlaying) {
-      this.music.play();
+    if (!this.currentMusic.isPlaying) {
+      this.currentMusic.play();
     }
   }
 
   public pauseMusic(): void {
-    if (this.music.isPlaying) {
-      this.music.pause();
+    if (this.currentMusic.isPlaying) {
+      this.currentMusic.pause();
     }
   }
 
   public resumeMusic(): void {
-    if (this.music.isPaused) {
-      this.music.resume();
+    if (this.currentMusic.isPaused) {
+      this.currentMusic.resume();
     }
   }
 
   public stopMusic(): void {
-    if (this.music.isPlaying || this.music.isPaused) {
-      this.music.stop();
+    if (this.currentMusic.isPlaying || this.currentMusic.isPaused) {
+      this.currentMusic.stop();
     }
   }
 
@@ -43,10 +43,21 @@ export default class MusicController {
   }
 
   public isPlaying(): boolean {
-    return this.music.isPlaying;
+    return this.currentMusic.isPlaying;
   }
 
   public isPaused(): boolean {
-    return this.music.isPaused;
+    return this.currentMusic.isPaused;
+  }
+
+  changeTrack(newMusicKey: string): void {
+    if (this.currentMusic) {
+      this.currentMusic.stop(); // Para a música atual
+    }
+    this.currentMusic = this.scene.sound.add(newMusicKey, {
+      loop: true,
+      volume: 0.5,
+    });
+    this.playMusic(); // Toca a nova música
   }
 }

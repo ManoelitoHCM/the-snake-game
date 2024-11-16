@@ -55,7 +55,7 @@ export default class GameMap {
     // // Verifica se uma posição está fora dos limites do mapa
     isOutOfBounds(x: number, y: number): boolean {
         // Verificar se está fora dos limites
-        return this.offsetX / 32 >= x || (this.offsetY + 20) / 32 > y || x >= (this.getBounds().width + this.offsetX) / 32 || y + 0.5> (this.getBounds().height + this.offsetY) / 32;
+        return this.offsetX / 32 >= x || (this.offsetY + 20) / 32 > y || x >= (this.getBounds().width + this.offsetX) / 32 || y + 0.5 > (this.getBounds().height + this.offsetY) / 32;
     }
 
     getOffsets(): { offsetX: number; offsetY: number } {

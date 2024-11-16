@@ -14,6 +14,7 @@ export default class GameScene extends Phaser.Scene {
   private score: number = 0;
   private scoreText: Phaser.GameObjects.Text;
   private pauseKey: Phaser.Input.Keyboard.Key;
+  private isHighSpeedMusicPlaying: boolean = false;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -27,6 +28,7 @@ export default class GameScene extends Phaser.Scene {
       frameHeight: 64,
     });
     this.load.audio('backgroundMusic', '../assets/soundtrack/game-start.mp3');
+    this.load.audio('highSpeedMusic', '../assets/soundtrack/fast-snake.mp3');
   }
 
   create(): void {
@@ -81,6 +83,11 @@ export default class GameScene extends Phaser.Scene {
 
         if (this.score % 5 === 0 && this.score < 20) {
           this.snake.increaseSpeed(0.002);
+        }
+
+        if (this.score > 20 && !this.isHighSpeedMusicPlaying) {
+          this.musicController.changeTrack('highSpeedMusic');
+          this.isHighSpeedMusicPlaying = true;
         }
 
         if (this.score % 10 === 0) {

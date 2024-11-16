@@ -1,5 +1,4 @@
 import 'phaser';
-import loadingScreen from '../assets/images/loading-screen1.png';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -7,11 +6,12 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image('loadingImage', loadingScreen);
+    this.load.image('loadingImage', '../assets/images/loading-screen1.png');
   }
 
   create(): void {
-    const loadingImage = this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'loadingImage').setOrigin(0.5);
+    this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'loadingImage').setOrigin(0.5);
+
 
     // Criar uma área de clique invisível sobre a parte "Game Start"
     const gameStartZone = this.add.zone(
@@ -20,8 +20,8 @@ export default class BootScene extends Phaser.Scene {
       200, // Largura da área de clique
       75   // Altura da área de clique
     )
-    .setOrigin(0.5)
-    .setInteractive({ cursor: 'pointer' }); // Define o cursor como mão ao passar o mouse
+      .setOrigin(0.5)
+      .setInteractive({ cursor: 'pointer' }); // Define o cursor como mão ao passar o mouse
 
     // Adicionar um evento de clique à zona
     gameStartZone.on('pointerdown', () => {
