@@ -1,7 +1,3 @@
-Claro! Aqui está um exemplo de README para o seu projeto:
-
----
-
 # Ana Conda - O Jogo
 
 Ana Conda é um jogo de estilo arcade desenvolvido em **Phaser** e **TypeScript**, inspirado no clássico jogo da cobrinha. O projeto foi criado para um trabalho acadêmico e oferece uma experiência divertida, com mecânicas de jogo simples e uma trilha sonora imersiva.
