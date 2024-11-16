@@ -2,6 +2,7 @@ import 'phaser';
 import BootScene from '@scenes/BootScene';
 import MainScene from '@scenes/MainScene';
 import GameScene from '@scenes/GameScene'; 
+import PauseScene from '@scenes/PauseScene';
 import GameOverScene from '@scenes/GameOverScene';
 import CreditsScene from '@scenes/CreditScene';
 import ScoreBoardScene from '@scenes/ScoreBoardScene';
@@ -18,7 +19,7 @@ window.addEventListener('load', () => {
     parent: 'game',
     width: window.innerWidth, // Ajusta a largura para ocupar toda a janela
     height: window.innerHeight, // Ajusta a altura para ocupar toda a janela
-    scene: [BootScene, MainScene, ScoreBoardScene, GameScene, GameOverScene, CreditsScene], // Adicione todas as scenes aqui
+    scene: [BootScene, MainScene, ScoreBoardScene, GameScene, PauseScene, GameOverScene, CreditsScene], // Adicione todas as scenes aqui
     backgroundColor: '#222',
     scale: {
       mode: Phaser.Scale.RESIZE, // Torna o jogo responsivo ao redimensionar a janela

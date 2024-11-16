@@ -10,6 +10,9 @@ export default class GameScene extends Phaser.Scene {
   private score: number = 0;
   private scoreText: Phaser.GameObjects.Text;
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  private pauseKey: Phaser.Input.Keyboard.Key;
+  private isPaused: boolean = false;
+  private pauseText: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -26,7 +29,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create(): void {
-    // Inicializar o mapa
     console.log('Inicializando o mapa...');
     this.gameMap = new GameMap(this, 'map', 'tile_set', 'tile_set', this.cameras.main);
 
@@ -36,6 +38,7 @@ export default class GameScene extends Phaser.Scene {
 
     console.log('Inicializando o gerenciador de maçãs...');
     this.appleController = new AppleController(this, this.gameMap, 'snakeSprite', 15);
+    this.appleController.addApple(this.snake);
 
     // Adicionar o placar na parte superior da tela
     this.scoreText = this.add.text(16, 16, 'Score: 0', {
@@ -45,13 +48,22 @@ export default class GameScene extends Phaser.Scene {
       padding: { x: 10, y: 5 }
     });
 
-    this.appleController.addApple(this.snake);
+    // Configurar tecla de pausa
+    this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
     // Inicializar eventos de teclado
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
   update(time: number, delta: number): void {
+
+    // Verificar se a tecla de pausa foi pressionada
+    if (Phaser.Input.Keyboard.JustDown(this.pauseKey)) {
+      this.scene.pause(); // Pausa a `GameScene`
+      this.scene.launch('PauseScene'); // Lança a `PauseScene`
+      return;
+    }
+
     // Verificar entradas do teclado para ajustar a direção da cobra
     if (this.cursors.up.isDown && this.snake.direction !== 2) {
       this.snake.direction = 0; // Up
