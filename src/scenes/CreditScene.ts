@@ -20,7 +20,7 @@ export default class CreditsScene extends Phaser.Scene {
     const creditLines = [
       'Desenvolvido por: Manoelito Holanda',
       'Ferramentas: Phaser, TypeScript, Tiled',
-      'Música: Preencher',
+      'Música: Referências do Pixabay',
       'Inspirações: Jogo da cobrinha do Nokia',
       'Agradecimentos especiais: Terapeuta, família e amigos.'
     ];
