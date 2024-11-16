@@ -68,6 +68,7 @@ export default class GameScene extends Phaser.Scene {
 
       if (this.gameMap.isOutOfBounds(nextMove.x, nextMove.y)) {
         console.error('Você atingiu os limites do mapa!');
+        console.log("posicoes: " + nextMove.x, nextMove.y)
         this.gameOver();
         return;
       }
@@ -78,9 +79,6 @@ export default class GameScene extends Phaser.Scene {
         return;
       }
 
-      // console.log("posição cobra: " + nextMove.x, nextMove.y)
-      // console.log("posiçao da maçã: " + this.appleController.getApple().x, this.appleController.getApple().y)
-
       if (this.appleController.getApple() && this.appleController.getApple().x / 32 === nextMove.x && this.appleController.getApple().y / 32 === nextMove.y) {
         console.log('A cobra comeu a maçã!');
         this.appleController.getApple().destroy(); // Remove a maçã da cena
@@ -88,6 +86,13 @@ export default class GameScene extends Phaser.Scene {
         this.score += 1;
         this.scoreText.setText(`Score: ${this.score}`);
         this.appleController.addApple(this.snake); // Adiciona uma nova maçã
+
+        // Aumentar a velocidade a cada 5 maçãs (até 20)
+        if (this.score % 5 === 0 && this.score < 20) {
+          this.snake.increaseSpeed(0.002); // Aumenta a velocidade em uma quantidade específica
+          console.log(`Velocidade aumentada! Nova velocidade: ${this.snake.getSpeed()}`);
+        }
+
       }
 
       // Mover a cobra

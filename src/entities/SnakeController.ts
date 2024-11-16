@@ -158,6 +158,14 @@ export default class Snake {
         }
     }
 
+    public increaseSpeed(amount: number): void {
+        this.speed += amount;
+    }
+
+    public getSpeed(): number {
+        return this.speed;
+    }
+
     getTileWidth(): number {
         return this.tileWidth;
     }
