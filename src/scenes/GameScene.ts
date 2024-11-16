@@ -40,6 +40,7 @@ export default class GameScene extends Phaser.Scene {
     this.appleController = new AppleController(this, this.gameMap, 'snakeSprite', 15);
     this.appleController.addApple(this.snake);
 
+    this.score = 0;
     // Adicionar o placar na parte superior da tela
     this.scoreText = this.add.text(16, 16, 'Score: 0', {
       fontSize: '32px',
@@ -91,13 +92,12 @@ export default class GameScene extends Phaser.Scene {
         return;
       }
 
-      if (this.appleController.getApple() && this.appleController.getApple().x / 32 === nextMove.x && this.appleController.getApple().y / 32 === nextMove.y) {
-        console.log('A cobra comeu a maçã!');
-        this.appleController.getApple().destroy(); // Remove a maçã da cena
+      // Verificar colisão com maçãs
+      if (this.appleController.checkCollisionWithSnake(this.snake)) {
+        console.log('A cobra comeu uma maçã!');
         this.snake.grow(); // Faz a cobra crescer
         this.score += 1;
         this.scoreText.setText(`Score: ${this.score}`);
-        this.appleController.addApple(this.snake); // Adiciona uma nova maçã
 
         // Aumentar a velocidade a cada 5 maçãs (até 20)
         if (this.score % 5 === 0 && this.score < 20) {
@@ -105,6 +105,11 @@ export default class GameScene extends Phaser.Scene {
           console.log(`Velocidade aumentada! Nova velocidade: ${this.snake.getSpeed()}`);
         }
 
+        if (this.score % 10 === 0) {
+          this.appleController.addApple(this.snake, 2); // Adiciona duas maçãs após certas condições
+        } else {
+          this.appleController.addApple(this.snake, 1);
+        }
       }
 
       // Mover a cobra
