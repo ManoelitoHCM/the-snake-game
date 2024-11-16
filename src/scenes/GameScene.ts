@@ -5,6 +5,7 @@ import GameMap from '../entities/GameMap'; // Certifique-se de ajustar o caminho
 export default class GameScene extends Phaser.Scene {
   private snake: Snake;
   private gameMap: GameMap;
+  private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -22,54 +23,46 @@ export default class GameScene extends Phaser.Scene {
 
   create(): void {
     // Inicializar o mapa
-    this.gameMap = new GameMap(this, 'map', 'tile_set', 'tile_set', this.cameras.main); //, this.cameras.main);
+    this.gameMap = new GameMap(this, 'map', 'tile_set', 'tile_set', this.cameras.main);
 
-    const mapBounds = this.gameMap.getBounds();
-    // const offsetX = (this.cameras.main.width - mapBounds.width) / 2;
-    // const offsetY = (this.cameras.main.height - mapBounds.height) / 2;
-
-    // console.log('Offsets:', offsetX, offsetY);
-    // console.log('Dimensões do mapa:', this.gameMap.getBounds().width, this.gameMap.getBounds().height);
-
-    // const startX = Math.floor((mapBounds.width / 2) / 32) + offsetX / 32; 
-    // const startY = Math.floor((mapBounds.height / 2) / 32) + offsetY / 32;
-    // console.log('Coordenadas iniciais ajustadas da cobra:', startX, startY);
-
-    // Inicializar a cobra
-    this.snake = new Snake(this, 5, 5, 1, 0.01, 4, 'snakeSprite', 32, 32);
+    this.snake = new Snake(this, 20, 18, 1, 0.01, 4, 'snakeSprite', 32, 32);
     this.snake.drawSnake();
+
+    // Inicializar eventos de teclado
+    this.cursors = this.input.keyboard.createCursorKeys();
   }
 
   update(time: number, delta: number): void {
-    if (this.snake.canMove(delta)) {
-        const nextMove = this.snake.nextPosition();
-
-        // Verifique se a próxima posição em pixels está dentro dos limites do mapa com offset
-        // const tileWidth = this.snake.getTileWidth();
-        // const tileHeight = this.snake.getTileHeight();
-        // const offsetX = (this.cameras.main.width - this.gameMap.getBounds().width) / 2;
-        // const offsetY = (this.cameras.main.height - this.gameMap.getBounds().height) / 2;
-
-        // const nextPosX = nextMove.x * tileWidth + offsetX;
-        // const nextPosY = nextMove.y * tileHeight + offsetY;
-
-        // const mapWidth = this.gameMap.getBounds().width + offsetX;
-        // const mapHeight = this.gameMap.getBounds().height + offsetY;
-
-        // Verifique se a posição está fora dos limites
-        // if (
-            // nextPosX < offsetX || 
-            // nextPosY < offsetY || 
-            // nextPosX >= mapWidth || 
-            // nextPosY >= mapHeight
-        // ) {
-        //     console.error('A cobra atingiu os limites do mapa!');
-        //     return;
-        // }
-
-        this.snake.move();
+    // Verificar entradas do teclado para ajustar a direção da cobra
+    if (this.cursors.up.isDown && this.snake.direction !== 2) {
+      this.snake.direction = 0; // Up
+    } else if (this.cursors.down.isDown && this.snake.direction !== 0) {
+      this.snake.direction = 2; // Down
+    } else if (this.cursors.left.isDown && this.snake.direction !== 1) {
+      this.snake.direction = 3; // Left
+    } else if (this.cursors.right.isDown && this.snake.direction !== 3) {
+      this.snake.direction = 1; // Right
     }
 
+    if (this.snake.canMove(delta)) {
+      const nextMove = this.snake.nextPosition();
+
+      console.log("next move " + nextMove.x, nextMove.y)
+      // return this.offsetX > x || this.offsetY > y || x >= (this.getBounds().width + this.offsetX) || y >= (this.getBounds().height + this.offsetY);
+
+      console.log("limites inferiores mapa: " + this.gameMap.getOffsets().offsetX / 32, this.gameMap.getOffsets().offsetY / 32)
+      console.log("limites superiores mapa: " + (this.gameMap.getBounds().width + this.gameMap.getOffsets().offsetX) / 32, (this.gameMap.getBounds().height + this.gameMap.getOffsets().offsetY) / 32)
+
+      if (this.gameMap.isOutOfBounds(nextMove.x, nextMove.y)) {
+        console.error('A cobra atingiu os limites do mapa!');
+        return;
+      }
+
+      // Mover a cobra
+      this.snake.move();
+    }
+
+    // Redesenhar a cobra após o movimento
     this.snake.drawSnake();
-}
+  }
 }
