@@ -67,7 +67,14 @@ export default class GameScene extends Phaser.Scene {
       const nextMove = this.snake.nextPosition();
 
       if (this.gameMap.isOutOfBounds(nextMove.x, nextMove.y)) {
-        console.error('A cobra atingiu os limites do mapa!');
+        console.error('Você atingiu os limites do mapa!');
+        this.gameOver();
+        return;
+      }
+
+      if (this.snake.checkSelfCollision(nextMove.x, nextMove.y)) {
+        console.error('Você encontrou um obstáculo!');
+        this.gameOver();
         return;
       }
 
@@ -89,5 +96,10 @@ export default class GameScene extends Phaser.Scene {
 
     // Redesenhar a cobra após o movimento
     this.snake.drawSnake();
+  }
+
+  private gameOver(): void {
+    console.log('Game Over');
+    this.scene.start('GameOverScene'); // Troca para a cena de "Game Over"
   }
 }

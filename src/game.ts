@@ -1,7 +1,8 @@
 import 'phaser';
-import BootScene from '@scenes/BootScene'; // Importe sua BootScene
-import MainScene from '@scenes/MainScene'; // Importe sua MainScene
-import GameScene from '@scenes/GameScene'; // Importe sua GameScene
+import BootScene from '@scenes/BootScene';
+import MainScene from '@scenes/MainScene';
+import GameScene from '@scenes/GameScene'; 
+import GameOverScene from '@scenes/GameOverScene';
 
 export class Game extends Phaser.Game {
   constructor(config: Phaser.Types.Core.GameConfig) {
@@ -15,7 +16,7 @@ window.addEventListener('load', () => {
     parent: 'game',
     width: window.innerWidth, // Ajusta a largura para ocupar toda a janela
     height: window.innerHeight, // Ajusta a altura para ocupar toda a janela
-    scene: [BootScene, MainScene, GameScene], // Adicione todas as scenes aqui
+    scene: [BootScene, MainScene, GameScene, GameOverScene], // Adicione todas as scenes aqui
     backgroundColor: '#222',
     scale: {
       mode: Phaser.Scale.RESIZE, // Torna o jogo responsivo ao redimensionar a janela

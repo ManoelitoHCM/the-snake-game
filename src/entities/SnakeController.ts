@@ -82,7 +82,7 @@ export default class Snake {
         }
     }
 
-    private checkSelfCollision(x: number, y: number): boolean {
+    public checkSelfCollision(x: number, y: number): boolean {
         // Verifica se a posição (x, y) da cabeça colide com qualquer parte do corpo
         return this.segments.slice(1).some(segment => segment.x === x && segment.y === y);
     }
