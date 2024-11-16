@@ -20,9 +20,9 @@ export default class GameScene extends Phaser.Scene {
 
   preload(): void {
     // Carregar os recursos do mapa e da cobra
-    this.load.tilemapTiledJSON('map', '../assets/map_json.json');
-    this.load.image('tile_set', '../assets/terrain_tiles_v2.png');
-    this.load.spritesheet('snakeSprite', '../assets/snake-graphics.png', {
+    this.load.tilemapTiledJSON('map', '../assets/images/map_json.json');
+    this.load.image('tile_set', '../assets/images/terrain_tiles_v2.png');
+    this.load.spritesheet('snakeSprite', '../assets/images/snake-graphics.png', {
       frameWidth: 64,
       frameHeight: 64,
     });

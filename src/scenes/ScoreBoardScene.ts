@@ -15,7 +15,7 @@ export default class ScoreBoardScene extends Phaser.Scene {
 
   preload(): void {
     // Carregar a imagem de fundo
-    this.load.image('scoreBoardBackground', '../assets/score-board.png');
+    this.load.image('scoreBoardBackground', '../assets/images/score-board.png');
   }
 
   create(): void {

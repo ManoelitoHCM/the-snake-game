@@ -7,7 +7,7 @@ export default class GameOverScene extends Phaser.Scene {
 
   preload(): void {
     // Carregar a imagem de fundo
-    this.load.image('gameOverBackground', '../assets/game-over-screen.png');
+    this.load.image('gameOverBackground', '../assets/images/game-over-screen.png');
   }
 
   create(): void {

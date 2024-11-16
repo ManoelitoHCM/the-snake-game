@@ -1,5 +1,5 @@
 import 'phaser';
-import mainScreen from '../assets/main-screen.png';
+import mainScreen from '../assets/images/main-screen.png';
 
 export default class MainScene extends Phaser.Scene {
   constructor() {
