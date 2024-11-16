@@ -32,7 +32,7 @@ export default class AppleManager {
 
                 // Verificar se a cobra não está sobrepondo a nova posição da maçã
                 const overlap = snake.getSegments().some(segment => segment.x === ax && segment.y === ay);
-                
+
                 const appleOverlap = this.apples.some(apple => apple.x / 32 === ax && apple.y / 32 === ay);
 
                 // A posição deve estar vazia e dentro dos limites
@@ -49,9 +49,38 @@ export default class AppleManager {
             ).setDisplaySize(32, 32);
 
             this.apples.push(apple);
+
+            // Configurar o timer para a maçã
+            this.scene.time.delayedCall(5000, () => {
+                this.startAppleBlink(apple);
+            }, [], this);
+
+            // Remover a maçã após 7 segundos
+            this.scene.time.delayedCall(7000, () => {
+                this.removeApple(apple, snake);
+            }, [], this);
         }
     }
-    
+
+    private startAppleBlink(apple: Phaser.GameObjects.Sprite): void {
+        this.scene.tweens.add({
+            targets: apple,
+            alpha: { from: 1, to: 0 },
+            duration: 300,
+            yoyo: true,
+            repeat: -1 // Pisca continuamente até ser removida
+        });
+    }
+
+    private removeApple(apple: Phaser.GameObjects.Sprite, snake: Snake): void {
+        const index = this.apples.indexOf(apple);
+        if (index !== -1) {
+            apple.destroy();
+            this.apples.splice(index, 1);
+            this.addApple(snake); // Adiciona uma nova maçã quando uma é removida
+        }
+    }
+
     // Verifica se uma maçã foi comida e a remove
     public checkCollisionWithSnake(snake: Snake): boolean {
         for (let i = 0; i < this.apples.length; i++) {
