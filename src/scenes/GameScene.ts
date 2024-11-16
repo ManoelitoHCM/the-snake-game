@@ -7,6 +7,8 @@ export default class GameScene extends Phaser.Scene {
   private snake: Snake;
   private gameMap: GameMap;
   private appleController: AppleController;
+  private score: number = 0;
+  private scoreText: Phaser.GameObjects.Text;
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
   constructor() {
@@ -34,6 +36,15 @@ export default class GameScene extends Phaser.Scene {
 
     console.log('Inicializando o gerenciador de maçãs...');
     this.appleController = new AppleController(this, this.gameMap, 'snakeSprite', 15);
+
+    // Adicionar o placar na parte superior da tela
+    this.scoreText = this.add.text(16, 16, 'Score: 0', {
+      fontSize: '32px',
+      color: '#ffffff',
+      backgroundColor: '#000000',
+      padding: { x: 10, y: 5 }
+    });
+
     this.appleController.addApple(this.snake);
 
     // Inicializar eventos de teclado
@@ -55,22 +66,20 @@ export default class GameScene extends Phaser.Scene {
     if (this.snake.canMove(delta)) {
       const nextMove = this.snake.nextPosition();
 
-      // console.log("next move " + nextMove.x, nextMove.y)
-      // console.log("limites inferiores mapa: " + this.gameMap.getOffsets().offsetX / 32, this.gameMap.getOffsets().offsetY / 32)
-      // console.log("limites superiores mapa: " + (this.gameMap.getBounds().width + this.gameMap.getOffsets().offsetX) / 32, (this.gameMap.getBounds().height + this.gameMap.getOffsets().offsetY) / 32)
-
       if (this.gameMap.isOutOfBounds(nextMove.x, nextMove.y)) {
         console.error('A cobra atingiu os limites do mapa!');
         return;
       }
 
-      console.log("posição cobra: " + nextMove.x, nextMove.y)
-      console.log("posiçao da maçã: " + this.appleController.getApple().x, this.appleController.getApple().y)
+      // console.log("posição cobra: " + nextMove.x, nextMove.y)
+      // console.log("posiçao da maçã: " + this.appleController.getApple().x, this.appleController.getApple().y)
 
       if (this.appleController.getApple() && this.appleController.getApple().x / 32 === nextMove.x && this.appleController.getApple().y / 32 === nextMove.y) {
         console.log('A cobra comeu a maçã!');
         this.appleController.getApple().destroy(); // Remove a maçã da cena
         this.snake.grow(); // Faz a cobra crescer
+        this.score += 1;
+        this.scoreText.setText(`Score: ${this.score}`);
         this.appleController.addApple(this.snake); // Adiciona uma nova maçã
       }
 
