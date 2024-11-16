@@ -61,6 +61,12 @@ export default class Snake {
     move(): void {
         const nextMove = this.nextPosition();
 
+        if (this.checkSelfCollision(nextMove.x, nextMove.y)) {
+            console.error('A cobra colidiu com ela mesma!');
+            // Aqui você pode implementar a lógica para reiniciar o jogo ou terminar a partida
+            return;
+        }
+
         // Mover segmentos
         for (let i = this.segments.length - 1; i > 0; i--) {
             this.segments[i] = { ...this.segments[i - 1] };
@@ -74,6 +80,11 @@ export default class Snake {
             this.segments.push({ ...this.segments[this.segments.length - 1] });
             this.growSegments--;
         }
+    }
+
+    private checkSelfCollision(x: number, y: number): boolean {
+        // Verifica se a posição (x, y) da cabeça colide com qualquer parte do corpo
+        return this.segments.slice(1).some(segment => segment.x === x && segment.y === y);
     }
 
     public nextPosition(): { x: number, y: number } {
@@ -153,5 +164,9 @@ export default class Snake {
 
     getTileHeight(): number {
         return this.tileHeight;
+    }
+
+    getSegments(): { x: number, y: number }[] {
+        return this.segments;
     }
 }
