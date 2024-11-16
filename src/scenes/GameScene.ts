@@ -2,17 +2,17 @@ import 'phaser';
 import Snake from '../entities/SnakeController';
 import GameMap from '../entities/MapController';
 import AppleController from '../entities/AppleController';
+import MusicController from '../entities/MusicController';
 
 export default class GameScene extends Phaser.Scene {
   private snake: Snake;
   private gameMap: GameMap;
   private appleController: AppleController;
+  private musicController: MusicController;
   private score: number = 0;
   private scoreText: Phaser.GameObjects.Text;
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private pauseKey: Phaser.Input.Keyboard.Key;
-  private isPaused: boolean = false;
-  private pauseText: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'GameScene' });
@@ -26,6 +26,8 @@ export default class GameScene extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64,
     });
+
+    this.load.audio('backgroundMusic', '../assets/soundtrack/game-start.mp3');
   }
 
   create(): void {
@@ -40,6 +42,10 @@ export default class GameScene extends Phaser.Scene {
     this.appleController = new AppleController(this, this.gameMap, 'snakeSprite', 15);
     this.appleController.addApple(this.snake);
 
+    // Inicializar o controlador de música e tocar a música de fundo
+    this.musicController = new MusicController(this, 'backgroundMusic');
+    this.musicController.playMusic();
+
     this.score = 0;
     // Adicionar o placar na parte superior da tela
     this.scoreText = this.add.text(16, 16, 'Score: 0', {
@@ -47,6 +53,16 @@ export default class GameScene extends Phaser.Scene {
       color: '#ffffff',
       backgroundColor: '#000000',
       padding: { x: 10, y: 5 }
+    });
+
+    // Configurar tecla de pausa para música
+    const musicKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+    musicKey.on('down', () => {
+      if (this.musicController.isPlaying()) {
+        this.musicController.pauseMusic();
+      } else {
+        this.musicController.resumeMusic();
+      }
     });
 
     // Configurar tecla de pausa
@@ -122,6 +138,7 @@ export default class GameScene extends Phaser.Scene {
 
   private gameOver(): void {
     console.log('Game Over');
+    this.musicController.stopMusic(); // Parar a música quando o jogo acaba
     this.scene.start('GameOverScene'); // Troca para a cena de "Game Over"
   }
 }
