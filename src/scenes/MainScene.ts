@@ -30,7 +30,7 @@ export default class MainScene extends Phaser.Scene {
       45
     ).setOrigin(0.5).setInteractive({ cursor: 'pointer' });
     scoreZone.on('pointerdown', () => {
-      this.scene.start('ScoreboardScene');
+      this.scene.start('ScoreBoardScene');
     });
 
     const creditsZone = this.add.zone(

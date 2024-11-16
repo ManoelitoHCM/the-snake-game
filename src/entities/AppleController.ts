@@ -26,10 +26,8 @@ export default class AppleManager {
 
         while (!valid) {
             // Obter uma posição aleatória
-            //  this.offsetX / 32 >= x || this.offsetY / 32 >= y || x >= (this.getBounds().width + this.offsetX) / 32 || y >= (this.getBounds().height + this.offsetY) / 32;
-
-            ax = Phaser.Math.Between(offsetX / 32, (this.gameMap.getBounds().width + offsetX) / 32);
-            ay = Phaser.Math.Between(offsetY / 32, (this.gameMap.getBounds().height + offsetY) / 32);
+            ax = Phaser.Math.Between(offsetX / 32 + 2, (this.gameMap.getBounds().width + offsetX) / 32 - 2);
+            ay = Phaser.Math.Between(offsetY / 32 + 2, (this.gameMap.getBounds().height + offsetY) / 32 - 2);
 
             // Verificar se a cobra não está sobrepondo a nova posição da maçã
             const overlap = snake.getSegments().some(segment => segment.x === ax && segment.y === ay);
