@@ -47,7 +47,8 @@ export default class GameScene extends Phaser.Scene {
     this.musicController.playMusic();
 
     this.movementController = new MovementController(this, this.snake);
-
+    this.movementController.enableArrowKeys();
+    
     this.score = 0;
     this.scoreText = this.add.text(16, 16, 'Score: 0', {
       fontSize: '32px',
@@ -105,6 +106,8 @@ export default class GameScene extends Phaser.Scene {
 
   private gameOver(): void {
     this.musicController.stopMusic();
-    this.scene.start('GameOverScene');
+    this.movementController.disableArrowKeys(); // Desativa o controle de movimento
+    this.input.keyboard.removeAllListeners(); // Limpa todos os eventos de teclado da cena, se necessário
+    this.scene.start('GameOverScene', { score: this.score });
   }
 }

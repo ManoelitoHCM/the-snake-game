@@ -1,18 +1,11 @@
-import * as admin from 'firebase-admin';
-import * as dotenv from 'dotenv';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
+import firebaseConfig from "../config/firebaseConfig.json";
 
-dotenv.config();
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
 
-// Configuração do Firebase com variáveis de ambiente
-admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: process.env.PROJECT_ID,
-    clientEmail: process.env.CLIENT_EMAIL,
-    privateKey: process.env.PRIVATE_KEY?.replace(/\\n/g, '\n'), // Corrigir quebras de linha
-  }),
-});
-
-// Obter instância do Firestore
-const db = admin.firestore();
-
-export default db;
+export { analytics, db };

@@ -1,32 +1,40 @@
-// Importar o db do arquivo de configuração
-import db from './FirebaseConfig';
+import { db } from './FirebaseConfig'; // Ajuste o caminho conforme necessário
+import { collection, getDocs, addDoc, query, orderBy } from "firebase/firestore";
 
-export default class ScoreService {
-    constructor() { }
-
-    async saveScore(name: string, score: number): Promise<void> {
+class ScoreService {
+    async saveScore(playerName: string, score: number): Promise<void> {
         try {
-            // Adicionar um documento com ID automático
-            const docRef = await db.collection('players').add({
-                name: name,
+            const docRef = await addDoc(collection(db, 'scores'), {
+                name: playerName,
                 score: score,
+                timestamp: new Date().toISOString()
             });
-            console.log(`Score de ${name} com ${score} pontos salvo com sucesso! ID: ${docRef.id}`);
-        } catch (error) {
-            console.error('Erro ao salvar o score no Firestore:', error);
+            console.log(`Documento salvo com ID: ${docRef.id}`);
+        } catch (e) {
+            console.error("Erro ao adicionar documento: ", e);
         }
     }
 
-    async getTopScores(limit: number = 5): Promise<void> {
+    async getScores(): Promise<{ name: string, score: number }[]> {
         try {
-            const scoresRef = db.collection('players');
-            const querySnapshot = await scoresRef.orderBy('score', 'desc').limit(limit).get();
+            const scoresRef = collection(db, 'scores');
+            const scoresQuery = query(scoresRef, orderBy('score', 'desc'));
+            const querySnapshot = await getDocs(scoresQuery);
+            const scores: { name: string, score: number }[] = [];
 
             querySnapshot.forEach((doc) => {
-                console.log(doc.id, '=>', doc.data());
+                scores.push({
+                    name: doc.data().name,
+                    score: doc.data().score,
+                });
             });
-        } catch (error) {
-            console.error('Erro ao buscar os dados:', error);
+
+            return scores;
+        } catch (e) {
+            console.error("Erro ao buscar os scores: ", e);
+            return [];
         }
     }
 }
+
+export default ScoreService;

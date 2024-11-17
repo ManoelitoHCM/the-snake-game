@@ -1,62 +1,56 @@
 import 'phaser';
 import MusicController from '../entities/MusicController';
+import PlayerInputHandler from '../entities/PlayerInputHandler';
 // import ScoreService from '../services/ScoreService';
 
 export default class GameOverScene extends Phaser.Scene {
   private musicController: MusicController;
   // private scoreService: ScoreService;
   private finalScore: number;
+  private inputHandler: PlayerInputHandler;
 
   constructor() {
     super({ key: 'GameOverScene' });
     // this.scoreService = new ScoreService();
   }
 
-  // Receber o score final da GameScene
   init(data: { score: number }): void {
     this.finalScore = data.score;
   }
 
   preload(): void {
-    // Carregar a imagem de fundo
     this.load.image('gameOverBackground', '../assets/images/game-over-screen.png');
     this.load.audio('gameOverMusic', '../assets/soundtrack/game-over.mp3');
   }
 
   create(): void {
-    // Inicializar o controlador de música
     this.musicController = new MusicController(this, 'gameOverMusic');
     this.musicController.playMusic();
 
-    // Adicionar a imagem de fundo
     this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'gameOverBackground').setOrigin(0.5);
 
-    // Criar uma caixa de fundo com bordas arredondadas
-    const backgroundBox = this.add.graphics();
-    const boxWidth = 700;
-    const boxHeight = 100;
-    const boxX = this.cameras.main.centerX - boxWidth / 2;
-    const boxY = this.cameras.main.centerY - 75;
+    this.inputHandler = new PlayerInputHandler(this, this.finalScore, (playerName: string) => {
+      // Salvar o score usando o serviço de score (comentado por enquanto)
+      // await this.scoreService.saveScore(playerName, this.finalScore);
+      alert(`Score de ${playerName} salvo com sucesso!`);
+      
+      this.inputHandler.disableInput();
 
-    backgroundBox.fillStyle(0x000000, 0.8); // Cor preta com opacidade de 80%
-    backgroundBox.fillRoundedRect(boxX, boxY, boxWidth, boxHeight, 20); // Bordas arredondadas com raio de 20
+      this.add.text(this.cameras.main.centerX, this.cameras.main.centerY + 100, 'Pressione ESPAÇO para reiniciar \nou ESC para retornar ao menu inicial', {
+        fontSize: '32px',
+        color: '#ffffff',
+        align: 'center',
+      }).setOrigin(0.5);
 
-    // Adicionar instruções para reiniciar o jogo
-    const instructionText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY - 25, 'Pressione ESPAÇO para reiniciar \nou ESC para retornar ao menu inicial', {
-      fontSize: '32px',
-      color: '#ffffff',
-      align: 'center',
-    }).setOrigin(0.5);
+      this.input.keyboard.on('keydown-SPACE', () => {
+        this.musicController.stopMusic();
+        this.scene.start('GameScene');
+      });
 
-    // Adicionar evento de teclado para reiniciar o jogo
-    this.input.keyboard.on('keydown-SPACE', () => {
-      this.musicController.stopMusic(); // Parar a música antes de mudar de cena
-      this.scene.start('GameScene'); // Reinicia o jogo voltando para a `GameScene`
-    });
-
-    this.input.keyboard.on('keydown-ESC', () => {
-      this.musicController.stopMusic(); // Parar a música antes de mudar de cena
-      this.scene.start('MainScene'); // Volta para a `MainScene`
+      this.input.keyboard.on('keydown-ESC', () => {
+        this.musicController.stopMusic();
+        this.scene.start('MainScene');
+      });
     });
   }
 }

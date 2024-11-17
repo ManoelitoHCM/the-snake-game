@@ -29,6 +29,9 @@ window.addEventListener('load', () => {
       pixelArt: true,
       antialias: false,
     },
+    dom: {
+      createContainer: true
+    }
   };
 
   const game = new Game(cfg);

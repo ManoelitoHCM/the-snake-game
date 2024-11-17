@@ -2,6 +2,7 @@ const path = require('path');
 const htmlPlugin = require('html-webpack-plugin');
 const copyPlugin = require('copy-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 const htmlPluginCfg = new htmlPlugin({
   template: path.resolve(__dirname, 'index.html'),
@@ -49,7 +50,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [htmlPluginCfg, copyPluginCfg],
+  plugins: [htmlPluginCfg, copyPluginCfg, new NodePolyfillPlugin()],
   devServer: {
     static: path.resolve(__dirname, './dist'),
     host: 'localhost',
@@ -61,5 +62,17 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
     plugins: [tsconfigPathsPluginCfg],
+    fallback: {
+      assert: require.resolve('assert/'),
+      crypto: require.resolve('crypto-browserify'),
+      path: require.resolve('path-browserify'),
+      stream: require.resolve('stream-browserify'),
+      url: require.resolve('url/'),
+      zlib: require.resolve('browserify-zlib'),
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      util: require.resolve('util/'),
+      querystring: require.resolve('querystring-es3'),
+    },
   },
 };
