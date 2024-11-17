@@ -21,7 +21,12 @@
     "node": "^16.19.0"
   },
   "dependencies": {
-    "phaser": "^3.70.0"
+    "buffer": "^6.0.3",
+    "dotenv": "^16.4.5",
+    "firebase": "^11.0.2",
+    "firebase-admin": "^13.0.0",
+    "phaser": "^3.70.0",
+    "stream-browserify": "^3.0.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",

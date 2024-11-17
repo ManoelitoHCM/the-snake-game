@@ -1,11 +1,20 @@
 import 'phaser';
 import MusicController from '../entities/MusicController';
+// import ScoreService from '../services/ScoreService';
 
 export default class GameOverScene extends Phaser.Scene {
   private musicController: MusicController;
+  // private scoreService: ScoreService;
+  private finalScore: number;
 
   constructor() {
     super({ key: 'GameOverScene' });
+    // this.scoreService = new ScoreService();
+  }
+
+  // Receber o score final da GameScene
+  init(data: { score: number }): void {
+    this.finalScore = data.score;
   }
 
   preload(): void {
