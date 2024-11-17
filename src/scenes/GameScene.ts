@@ -5,6 +5,12 @@ import AppleController from '../entities/AppleController';
 import MusicController from '../entities/MusicController';
 import MovementController from '../entities/MovementController';
 
+import mapJson from '../assets/images/map_json.json';
+import tileSetImage from '../assets/images/terrain_tiles_v2.png';
+import snakeSpriteSheet from '../assets/images/snake-graphics.png';
+import backgroundMusic from '../assets/soundtrack/game-start.mp3';
+import highSpeedMusic from '../assets/soundtrack/fast-snake.mp3';
+
 export default class GameScene extends Phaser.Scene {
   private snake: Snake;
   private gameMap: GameMap;
@@ -21,14 +27,14 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.tilemapTiledJSON('map', '../assets/images/map_json.json');
-    this.load.image('tile_set', '../assets/images/terrain_tiles_v2.png');
-    this.load.spritesheet('snakeSprite', '../assets/images/snake-graphics.png', {
+    this.load.tilemapTiledJSON('map', mapJson);
+    this.load.image('tile_set', tileSetImage);
+    this.load.spritesheet('snakeSprite', snakeSpriteSheet, {
       frameWidth: 64,
       frameHeight: 64,
     });
-    this.load.audio('backgroundMusic', '../assets/soundtrack/game-start.mp3');
-    this.load.audio('highSpeedMusic', '../assets/soundtrack/fast-snake.mp3');
+    this.load.audio('backgroundMusic', backgroundMusic);
+    this.load.audio('highSpeedMusic', highSpeedMusic);
   }
 
   create(): void {

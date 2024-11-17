@@ -1,6 +1,9 @@
 import 'phaser';
 import MusicController from '../entities/MusicController';
 
+import menuBackgroundImage from '../assets/images/main-screen.png';
+import menuMusic from '../assets/soundtrack/main-scene.mp3';
+
 export default class MainScene extends Phaser.Scene {
   private static musicController: MusicController | null = null;
 
@@ -9,8 +12,8 @@ export default class MainScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image('menuBackground', '../assets/images/main-screen.png');
-    this.load.audio('menuMusic', '../assets/soundtrack/main-scene.mp3');
+    this.load.image('menuBackground', menuBackgroundImage);
+    this.load.audio('menuMusic', menuMusic);
   }
 
   create(): void {

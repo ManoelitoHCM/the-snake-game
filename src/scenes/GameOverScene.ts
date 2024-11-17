@@ -2,6 +2,8 @@ import 'phaser';
 import MusicController from '../entities/MusicController';
 import PlayerInputHandler from '../entities/PlayerInputHandler';
 import ScoreService from '../services/ScoreService';
+import gameOverBackground from '../assets/images/game-over-screen.png';
+import gameOverMusic from '../assets/soundtrack/game-over.mp3';
 
 export default class GameOverScene extends Phaser.Scene {
   private musicController: MusicController;
@@ -19,8 +21,8 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image('gameOverBackground', '../assets/images/game-over-screen.png');
-    this.load.audio('gameOverMusic', '../assets/soundtrack/game-over.mp3');
+    this.load.image('gameOverBackground', gameOverBackground);
+    this.load.audio('gameOverMusic', gameOverMusic);
   }
 
   async create(): Promise<void> {

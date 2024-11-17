@@ -27,6 +27,15 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(mp3|wav)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[path][name].[ext]',
+          },
+        },
+      },
+      {
         test: /\.(png|jpe?g|svg)/i,
         loader: 'file-loader',
         options: {
