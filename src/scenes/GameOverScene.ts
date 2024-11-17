@@ -43,7 +43,17 @@ export default class GameOverScene extends Phaser.Scene {
         alert('Houve um erro ao salvar o score.');
       }
 
-      // Adiciona o texto e as opções de reiniciar ou sair após a entrada ser removida
+      // Criar uma caixa arredondada para o texto
+      const boxWidth = 500;
+      const boxHeight = 120;
+      const boxX = this.cameras.main.centerX - boxWidth / 2;
+      const boxY = this.cameras.main.centerY + 75;
+
+      const backgroundBox = this.add.graphics();
+      backgroundBox.fillStyle(0x000000, 0.8); // Preto com opacidade de 80%
+      backgroundBox.fillRoundedRect(boxX, boxY, boxWidth, boxHeight, 20); // Bordas arredondadas com raio de 20
+
+      // Adicionar o texto de instruções
       this.add.text(this.cameras.main.centerX, this.cameras.main.centerY + 100, 'Pressione ESPAÇO para reiniciar \nou ESC para retornar ao menu inicial', {
         fontSize: '32px',
         color: '#ffffff',
