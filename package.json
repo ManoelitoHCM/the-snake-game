@@ -1,7 +1,7 @@
 {
-  "name": "phaser-typescript-skeleton",
+  "name": "ana-conda-the-game",
   "version": "1.0.0",
-  "description": "A simple skeleton to help quickly bootstraping Phaser games with TypeScript.",
+  "description": "A simple snake game with TypeScript and Phaser.",
   "main": "src/game.ts",
   "license": "GPL-3.0",
   "keywords": [
