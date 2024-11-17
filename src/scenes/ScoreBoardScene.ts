@@ -1,6 +1,8 @@
 import 'phaser';
 import ScoreService from '../services/ScoreService';
 
+import scoreBoard from '../assets/images/score-board.png';
+
 export default class ScoreBoardScene extends Phaser.Scene {
   private scoreService: ScoreService;
   private scores: { name: string, score: number }[];
@@ -13,21 +15,21 @@ export default class ScoreBoardScene extends Phaser.Scene {
 
   preload(): void {
     // Carregar a imagem de fundo
-    this.load.image('scoreBoardBackground', '../assets/images/score-board.png');
+    this.load.image('scoreBoardBackground', scoreBoard);
   }
 
   async create(): Promise<void> {
     // Adicionar a imagem de fundo
     this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'scoreBoardBackground').setOrigin(0.5);
 
-    // Título
-    this.add.text(this.cameras.main.centerX, 50, 'Score Board', {
-      fontSize: '48px',
-      color: '#ffffff',
-      fontStyle: 'bold',
-      backgroundColor: '#000000',
-      padding: { x: 10, y: 5 },
-    }).setOrigin(0.5);
+    // // Título
+    // this.add.text(this.cameras.main.centerX, 50, 'Score Board', {
+    //   fontSize: '48px',
+    //   color: '#000000',
+    //   fontStyle: 'bold',
+    //   backgroundColor: '#ffffff',
+    //   padding: { x: 10, y: 5 },
+    // }).setOrigin(0.5);
 
     // Recuperar os dados do banco de dados
     try {
@@ -44,8 +46,8 @@ export default class ScoreBoardScene extends Phaser.Scene {
     // Botão para voltar ao menu principal
     this.add.text(this.cameras.main.centerX, this.cameras.main.height - 50, 'Pressione ESC para voltar ao menu', {
       fontSize: '20px',
-      color: '#ffffff',
-      backgroundColor: '#000000',
+      color: '#000000',
+      backgroundColor: '#ffffff',
       padding: { x: 5, y: 2 },
     }).setOrigin(0.5);
 
@@ -58,18 +60,18 @@ export default class ScoreBoardScene extends Phaser.Scene {
   private displayScores(): void {
     // Ordenar do maior para o menor e exibir a lista de pontuações
     this.scores.sort((a, b) => b.score - a.score);
-    let startY = 150;
-    const lineSpacing = 40;
+    let startY = 330;
+    const lineSpacing = 35;
 
     this.scores.forEach((entry, index) => {
-      this.add.text(this.cameras.main.centerX - 150, startY + index * lineSpacing, `${index + 1}. ${entry.name}`, {
+      this.add.text(this.cameras.main.centerX - 140, startY + index * lineSpacing, `${index + 1}. ${entry.name}`, {
         fontSize: '24px',
-        color: '#ffffff',
+        color: '#000000',
       });
 
-      this.add.text(this.cameras.main.centerX + 150, startY + index * lineSpacing, `${entry.score}`, {
+      this.add.text(this.cameras.main.centerX + 165, startY + index * lineSpacing, `${entry.score}`, {
         fontSize: '24px',
-        color: '#ffffff',
+        color: '#000000',
       }).setOrigin(1, 0);
     });
   }

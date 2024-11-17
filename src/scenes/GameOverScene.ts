@@ -2,6 +2,7 @@ import 'phaser';
 import MusicController from '../entities/MusicController';
 import PlayerInputHandler from '../entities/PlayerInputHandler';
 import ScoreService from '../services/ScoreService';
+
 import gameOverBackground from '../assets/images/game-over-screen.png';
 import gameOverMusic from '../assets/soundtrack/game-over.mp3';
 

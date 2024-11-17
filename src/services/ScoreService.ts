@@ -1,5 +1,5 @@
 import { db } from './FirebaseConfig'; // Ajuste o caminho conforme necessário
-import { collection, getDocs, setDoc, doc, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, setDoc, doc, query, orderBy, limit } from "firebase/firestore";
 
 class ScoreService {
     async saveScore(playerName: string, score: number): Promise<void> {
@@ -23,7 +23,7 @@ class ScoreService {
     async getScores(): Promise<{ name: string, score: number }[]> {
         try {
             const scoresRef = collection(db, 'scores');
-            const scoresQuery = query(scoresRef, orderBy('score', 'desc'));
+            const scoresQuery = query(scoresRef, orderBy('score', 'desc'), limit(10));
             const querySnapshot = await getDocs(scoresQuery);
             const scores: { name: string, score: number }[] = [];
 

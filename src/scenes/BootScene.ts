@@ -1,4 +1,5 @@
 import 'phaser';
+
 import loadingImage from '../assets/images/loading-screen1.png';
 
 export default class BootScene extends Phaser.Scene {
