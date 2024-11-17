@@ -1,17 +1,22 @@
 import { db } from './FirebaseConfig'; // Ajuste o caminho conforme necessário
-import { collection, getDocs, addDoc, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, setDoc, doc, query, orderBy } from "firebase/firestore";
 
 class ScoreService {
     async saveScore(playerName: string, score: number): Promise<void> {
         try {
-            const docRef = await addDoc(collection(db, 'scores'), {
+            // Gerar um ID baseado no nome do jogador (por exemplo, "player-<nome>")
+            const playerId = `player-${playerName.replace(/\s+/g, '_').toLowerCase()}`;
+
+            // Definir o documento com o ID específico
+            await setDoc(doc(db, 'scores', playerId), {
                 name: playerName,
                 score: score,
                 timestamp: new Date().toISOString()
             });
-            console.log(`Documento salvo com ID: ${docRef.id}`);
+
+            console.log(`Score salvo com ID: ${playerId}`);
         } catch (e) {
-            console.error("Erro ao adicionar documento: ", e);
+            console.error("Erro ao adicionar ou atualizar documento: ", e);
         }
     }
 

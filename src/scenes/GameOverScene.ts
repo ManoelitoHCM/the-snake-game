@@ -1,17 +1,17 @@
 import 'phaser';
 import MusicController from '../entities/MusicController';
 import PlayerInputHandler from '../entities/PlayerInputHandler';
-// import ScoreService from '../services/ScoreService';
+import ScoreService from '../services/ScoreService';
 
 export default class GameOverScene extends Phaser.Scene {
   private musicController: MusicController;
-  // private scoreService: ScoreService;
+  private scoreService: ScoreService;
   private finalScore: number;
   private inputHandler: PlayerInputHandler;
 
   constructor() {
     super({ key: 'GameOverScene' });
-    // this.scoreService = new ScoreService();
+    this.scoreService = new ScoreService();
   }
 
   init(data: { score: number }): void {
@@ -23,19 +23,27 @@ export default class GameOverScene extends Phaser.Scene {
     this.load.audio('gameOverMusic', '../assets/soundtrack/game-over.mp3');
   }
 
-  create(): void {
+  async create(): Promise<void> {
     this.musicController = new MusicController(this, 'gameOverMusic');
     this.musicController.playMusic();
 
     this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'gameOverBackground').setOrigin(0.5);
 
-    this.inputHandler = new PlayerInputHandler(this, this.finalScore, (playerName: string) => {
-      // Salvar o score usando o serviço de score (comentado por enquanto)
-      // await this.scoreService.saveScore(playerName, this.finalScore);
-      alert(`Score de ${playerName} salvo com sucesso!`);
-      
-      this.inputHandler.disableInput();
+    this.inputHandler = new PlayerInputHandler(this, this.finalScore, async (playerName: string) => {
+      console.log('Função de salvar score chamada com o nome:', playerName);
+      try {
+        await this.scoreService.saveScore(playerName, this.finalScore);
+        console.log('Score salvo com sucesso.');
+        alert(`Score de ${playerName} salvo com sucesso!`);
 
+        // Remove a entrada e o botão após o score ser salvo
+        this.inputHandler.removeInput();
+      } catch (error) {
+        console.error('Erro ao salvar o score:', error);
+        alert('Houve um erro ao salvar o score.');
+      }
+
+      // Adiciona o texto e as opções de reiniciar ou sair após a entrada ser removida
       this.add.text(this.cameras.main.centerX, this.cameras.main.centerY + 100, 'Pressione ESPAÇO para reiniciar \nou ESC para retornar ao menu inicial', {
         fontSize: '32px',
         color: '#ffffff',
