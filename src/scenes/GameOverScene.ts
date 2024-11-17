@@ -44,10 +44,10 @@ export default class GameOverScene extends Phaser.Scene {
       }
 
       // Criar uma caixa arredondada para o texto
-      const boxWidth = 500;
-      const boxHeight = 120;
+      const boxWidth = 700;
+      const boxHeight = 100;
       const boxX = this.cameras.main.centerX - boxWidth / 2;
-      const boxY = this.cameras.main.centerY + 75;
+      const boxY = this.cameras.main.centerY + 50;
 
       const backgroundBox = this.add.graphics();
       backgroundBox.fillStyle(0x000000, 0.8); // Preto com opacidade de 80%
