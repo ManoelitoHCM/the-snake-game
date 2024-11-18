@@ -8,7 +8,7 @@ export default class PlayerInputHandler {
 
     // Criar uma entrada DOM para o nome do jogador
     this.inputElement = this.scene.add.dom(this.scene.cameras.main.centerX, this.scene.cameras.main.centerY - 50).createFromHTML(`
-      <input type="text" id="playerName" placeholder="Digite seu nome" style="font-size: 24px; padding: 5px; border-radius: 5px; border: 1px solid #000; background-color: #fff; text-align: center;">
+      <input type="text" id="playerName" placeholder="Digite seu nome" maxlength="20" style="font-size: 24px; padding: 5px; border-radius: 5px; border: 1px solid #000; background-color: #fff; text-align: center;">
     `);
 
     // Criar o botão de salvar
@@ -21,10 +21,12 @@ export default class PlayerInputHandler {
 
     this.saveButton.on('pointerdown', () => {
       const playerName = (document.getElementById('playerName') as HTMLInputElement).value;
-      if (playerName) {
+
+      // Verificar se o nome contém apenas caracteres permitidos (a-Z, 0-9, e hífen) e tem até 20 caracteres
+      if (playerName && /^[a-zA-Z0-9-]+$/.test(playerName)) {
         onSave(playerName);
       } else {
-        alert('Por favor, insira um nome antes de salvar.');
+        alert('Por favor, insira um nome válido com até 20 caracteres alfanuméricos e hífens.');
       }
     });
   }

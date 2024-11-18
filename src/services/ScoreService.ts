@@ -4,6 +4,11 @@ import { collection, getDocs, setDoc, doc, query, orderBy, limit } from "firebas
 class ScoreService {
     async saveScore(playerName: string, score: number): Promise<void> {
         try {
+            // Verificar se o nome tem no máximo 20 caracteres e é alfanumérico
+            if (!/^[a-zA-Z0-9]+$/.test(playerName) || playerName.length > 20) {
+                throw new Error("O nome do jogador deve ter no máximo 20 caracteres e ser alfanumérico.");
+            }
+
             // Gerar um ID baseado no nome do jogador (por exemplo, "player-<nome>")
             const playerId = `player-${playerName.replace(/\s+/g, '_').toLowerCase()}`;
 

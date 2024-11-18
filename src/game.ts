@@ -22,8 +22,8 @@ window.addEventListener('load', () => {
     scene: [BootScene, MainScene, ScoreBoardScene, GameScene, PauseScene, GameOverScene, CreditsScene], // Adicione todas as scenes aqui
     backgroundColor: '#222',
     scale: {
-      mode: Phaser.Scale.RESIZE, // Torna o jogo responsivo ao redimensionar a janela
-      autoCenter: Phaser.Scale.CENTER_BOTH, // Centraliza o canvas
+      mode: Phaser.Scale.FIT,
+      autoCenter: Phaser.Scale.CENTER_BOTH,
     },
     render: {
       pixelArt: true,
